@@ -30,7 +30,6 @@ export default function Home() {
   let premium: number = 0;
   let ages: number[] = [];
   let sumOfAges = 0
-
   
   const computedData = useMemo(() => {
     if (!dataQuery.data) {
