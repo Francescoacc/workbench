@@ -16,7 +16,6 @@ function median(arr:number[]) {
       (arr[midpoint - 1] + arr[midpoint]) / 2; // 3.2. If even length, take median of midpoints
   return median;
 }
-
 export default function Home() {
 
   const dataQuery = useQuery("repoData", () =>
@@ -24,17 +23,15 @@ export default function Home() {
       (res): Promise<FakeDatum[]> => res.json()
     )
   );
-
-  let maxAge: number = 0;
-  let minAge: number = 130;
-  let premium: number = 0;
-  let ages: number[] = [];
-  let sumOfAges = 0
   
   const computedData = useMemo(() => {
-    if (!dataQuery.data) {
-      return null;
-    }
+
+    let maxAge: number = 0;
+    let minAge: number = 130;
+    let premium: number = 0;
+    let ages: number[]= [] ;
+    let sumOfAges: number = 0
+
     dataQuery.data?.forEach(data => {
       let years = new Date().getFullYear() - new Date(data.birthday).getFullYear()
       sumOfAges = sumOfAges + years
@@ -49,6 +46,7 @@ export default function Home() {
         minAge= years
       }
     })
+    return {maxAge, minAge, premium, ages, sumOfAges}
   }, [dataQuery.data]);
 
   const renderCounterRef = useRef<number>(0);
@@ -57,11 +55,11 @@ export default function Home() {
 
   const descriptionListArray = [
     { key: "Records", value: dataQuery.data?.length },
-    { key: "Max age", value: maxAge },
-    { key: "Min age", value: minAge },
-    { key: "Mean age", value: sumOfAges/ages.length},
-    { key: "Median age", value: median(ages)},
-    { key: "Percentage of premium", value: (premium*100/ages.length).toString()+"%"},
+    { key: "Max age", value: computedData.maxAge },
+    { key: "Min age", value: computedData.minAge },
+    { key: "Mean age", value: computedData.sumOfAges / computedData.ages.length},
+    { key: "Median age", value: median(computedData.ages)},
+    { key: "Percentage of premium", value: (computedData.premium*100/computedData.ages.length).toString()+"%"},
   ];
   const backGround = useRef<HTMLDivElement>(null);
 
