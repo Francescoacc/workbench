@@ -31,20 +31,25 @@ export default function Home() {
   let ages: number[] = [];
   let sumOfAges = 0
 
-  dataQuery.data?.forEach(data => {
-    let years = new Date().getFullYear() - new Date(data.birthday).getFullYear()
-    sumOfAges = sumOfAges + years
-    ages.push(years)
-    if(data.subscriptionTier == "premium"){
-      premium = premium +1
+  const computedData = useMemo(() => {
+    if (!dataQuery.data) {
+      return null;
     }
-    if(maxAge < years){
-      maxAge = years
-    }
-    if(minAge > years){
-      minAge= years
-    }
-  })
+    dataQuery.data?.forEach(data => {
+      let years = new Date().getFullYear() - new Date(data.birthday).getFullYear()
+      sumOfAges = sumOfAges + years
+      ages.push(years)
+      if(data.subscriptionTier == "premium"){
+        premium = premium +1
+      }
+      if(maxAge < years){
+        maxAge = years
+      }
+      if(minAge > years){
+        minAge= years
+      }
+    })
+  }, [dataQuery.data]);
 
   const renderCounterRef = useRef<number>(0);
   const renderCounterElementRef = useRef<HTMLElement>(null);
