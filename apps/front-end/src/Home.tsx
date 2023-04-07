@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import { useQuery } from "react-query";
 import { PORT } from "../../back-end/src/constants";
 import { FakeDatum } from "../../back-end/src/types";
@@ -31,6 +31,7 @@ export default function Home() {
   let ages: number[] = [];
   let sumOfAges = 0
 
+  
   const computedData = useMemo(() => {
     if (!dataQuery.data) {
       return null;
